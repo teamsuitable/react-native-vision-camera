@@ -8,14 +8,16 @@
 
 #pragma once
 
-#import <Foundation/Foundation.h>
 #import "Frame.h"
-
-typedef id (^FrameProcessorPlugin) (Frame* frame, NSArray<id>* arguments);
+#import "FrameProcessorPlugin.h"
+#import <Foundation/Foundation.h>
 
 @interface FrameProcessorPluginRegistry : NSObject
 
-+ (NSMutableDictionary<NSString*, FrameProcessorPlugin>*)frameProcessorPlugins;
-+ (void) addFrameProcessorPlugin:(NSString*)name callback:(FrameProcessorPlugin)callback;
+typedef FrameProcessorPlugin* _Nonnull (^PluginInitializerFunction)(NSDictionary* _Nullable options);
+
++ (void)addFrameProcessorPlugin:(NSString* _Nonnull)name withInitializer:(PluginInitializerFunction _Nonnull)pluginInitializer;
+
++ (FrameProcessorPlugin* _Nullable)getPlugin:(NSString* _Nonnull)name withOptions:(NSDictionary* _Nullable)options;
 
 @end

@@ -10,21 +10,14 @@
 
 #import <Foundation/Foundation.h>
 
-#import <React/RCTViewManager.h>
+#import <React/RCTEventEmitter.h>
+#import <React/RCTFPSGraph.h>
+#import <React/RCTLog.h>
 #import <React/RCTUIManager.h>
+#import <React/RCTViewManager.h>
 
-#import "FrameProcessorCallback.h"
-#import "FrameProcessorRuntimeManager.h"
+#if VISION_CAMERA_ENABLE_FRAME_PROCESSORS
 #import "Frame.h"
-#import "RCTBridge+runOnJS.h"
-#import "JSConsoleHelper.h"
-
-#ifdef VISION_CAMERA_DISABLE_FRAME_PROCESSORS
-static bool VISION_CAMERA_ENABLE_FRAME_PROCESSORS = false;
-#else
-static bool VISION_CAMERA_ENABLE_FRAME_PROCESSORS = true;
+#import "FrameProcessor.h"
+#import "VisionCameraProxy.h"
 #endif
-
-@interface CameraBridge: RCTViewManager
-
-@end

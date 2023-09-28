@@ -1,5 +1,5 @@
 //
-//  AVCaptureDevice.Position+String.swift
+//  AVCaptureDevice.Position+descriptor.swift
 //  mrousavy
 //
 //  Created by Marc Rousavy on 15.12.20.
@@ -17,7 +17,7 @@ extension AVCaptureDevice.Position {
     case .front:
       return "front"
     case .unspecified:
-      return "unspecified"
+      return "external"
     @unknown default:
       fatalError("AVCaptureDevice.Position has unknown state.")
     }

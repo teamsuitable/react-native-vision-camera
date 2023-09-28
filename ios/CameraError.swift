@@ -74,11 +74,12 @@ enum DeviceError: String {
   case configureError = "configuration-error"
   case noDevice = "no-device"
   case invalid = "invalid-device"
-  case torchUnavailable = "torch-unavailable"
+  case flashUnavailable = "flash-unavailable"
   case microphoneUnavailable = "microphone-unavailable"
   case lowLightBoostNotSupported = "low-light-boost-not-supported"
   case focusNotSupported = "focus-not-supported"
   case notAvailableOnSimulator = "camera-not-available-on-simulator"
+  case pixelFormatNotSupported = "pixel-format-not-supported"
 
   var code: String {
     return rawValue
@@ -89,11 +90,11 @@ enum DeviceError: String {
     case .configureError:
       return "Failed to lock the device for configuration."
     case .noDevice:
-      return "No device was set! Use `getAvailableCameraDevices()` to select a suitable Camera device."
+      return "No device was set! Use `useCameraDevice(..)` or `Camera.getAvailableCameraDevices()` to select a suitable Camera device."
     case .invalid:
-      return "The given Camera device was invalid. Use `getAvailableCameraDevices()` to select a suitable Camera device."
-    case .torchUnavailable:
-      return "The current camera device does not have a torch."
+      return "The given Camera device was invalid. Use `useCameraDevice(..)` or `Camera.getAvailableCameraDevices()` to select a suitable Camera device."
+    case .flashUnavailable:
+      return "The Camera Device does not have a flash unit! Make sure you select a device where `hasFlash`/`hasTorch` is true!"
     case .lowLightBoostNotSupported:
       return "The currently selected camera device does not support low-light boost! Make sure you select a device where `supportsLowLightBoost` is true!"
     case .focusNotSupported:
@@ -102,6 +103,8 @@ enum DeviceError: String {
       return "The microphone was unavailable."
     case .notAvailableOnSimulator:
       return "The Camera is not available on the iOS Simulator!"
+    case .pixelFormatNotSupported:
+      return "The given pixelFormat is not supported on the given Camera Device!"
     }
   }
 }
@@ -112,8 +115,7 @@ enum FormatError {
   case invalidFps(fps: Int)
   case invalidHdr
   case invalidFormat
-  case invalidColorSpace(colorSpace: String)
-  case invalidPreset(preset: String)
+  case incompatiblePixelFormatWithHDR
 
   var code: String {
     switch self {
@@ -123,26 +125,21 @@ enum FormatError {
       return "invalid-fps"
     case .invalidHdr:
       return "invalid-hdr"
-    case .invalidPreset:
-      return "invalid-preset"
-    case .invalidColorSpace:
-      return "invalid-color-space"
+    case .incompatiblePixelFormatWithHDR:
+      return "incompatible-pixel-format-with-hdr-setting"
     }
   }
 
   var message: String {
     switch self {
     case .invalidFormat:
-      return "The given format was invalid. Did you check if the current device supports the given format by using `getAvailableCameraDevices(...)`?"
+      return "The given format was invalid. Did you check if the current device supports the given format in `device.formats`?"
     case let .invalidFps(fps):
-      return "The given FPS were not valid for the currently selected format. Make sure you select a format which `frameRateRanges` includes \(fps) FPS!"
+      return "The given format cannot run at \(fps) FPS! Make sure your FPS is lower than `format.maxFps` but higher than `format.minFps`."
     case .invalidHdr:
-      return "The currently selected format does not support HDR capture! Make sure you select a format which `frameRateRanges` includes `supportsPhotoHDR`!"
-    case let .invalidColorSpace(colorSpace):
-      return "The currently selected format does not support the colorSpace \"\(colorSpace)\"! " +
-        "Make sure you select a format which `colorSpaces` includes \"\(colorSpace)\"!"
-    case let .invalidPreset(preset):
-      return "The preset \"\(preset)\" is not available for the current camera device."
+      return "The currently selected format does not support HDR capture! Make sure you select a format which includes `supportsPhotoHDR`/`supportsVideoHDR`!"
+    case .incompatiblePixelFormatWithHDR:
+      return "The currently selected pixelFormat is not compatible with HDR! HDR only works with the `yuv` pixelFormat."
     }
   }
 }
@@ -256,6 +253,7 @@ enum CaptureError {
 
 enum SystemError: String {
   case noManager = "no-camera-manager"
+  case frameProcessorsUnavailable = "frame-processors-unavailable"
 
   var code: String {
     return rawValue
@@ -265,6 +263,8 @@ enum SystemError: String {
     switch self {
     case .noManager:
       return "No Camera Manager was found."
+    case .frameProcessorsUnavailable:
+      return "Frame Processors are unavailable - is react-native-worklets-core installed?"
     }
   }
 }

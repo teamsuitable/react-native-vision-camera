@@ -1,5 +1,5 @@
 //
-//  JSIUtils.h
+//  JSINSObjectConversion.h
 //  VisionCamera
 //
 //  Created by Marc Rousavy on 30.04.21.
@@ -8,9 +8,11 @@
 
 #pragma once
 
-#import <jsi/jsi.h>
-#import <ReactCommon/CallInvoker.h>
 #import <React/RCTBridgeModule.h>
+#import <ReactCommon/CallInvoker.h>
+#import <jsi/jsi.h>
+
+namespace JSINSObjectConversion {
 
 using namespace facebook;
 using namespace facebook::react;
@@ -37,7 +39,8 @@ jsi::Value convertObjCObjectToJSIValue(jsi::Runtime& runtime, id value);
 NSString* convertJSIStringToNSString(jsi::Runtime& runtime, const jsi::String& value);
 
 // any... -> NSArray
-NSArray* convertJSICStyleArrayToNSArray(jsi::Runtime& runtime, const jsi::Value* array, size_t length, std::shared_ptr<CallInvoker> jsInvoker);
+NSArray* convertJSICStyleArrayToNSArray(jsi::Runtime& runtime, const jsi::Value* array, size_t length,
+                                        std::shared_ptr<CallInvoker> jsInvoker);
 
 // NSArray -> any...
 jsi::Value* convertNSArrayToJSICStyleArray(jsi::Runtime& runtime, NSArray* array);
@@ -52,4 +55,7 @@ NSDictionary* convertJSIObjectToNSDictionary(jsi::Runtime& runtime, const jsi::O
 id convertJSIValueToObjCObject(jsi::Runtime& runtime, const jsi::Value& value, std::shared_ptr<CallInvoker> jsInvoker);
 
 // (any...) => any -> (void)(id, id)
-RCTResponseSenderBlock convertJSIFunctionToCallback(jsi::Runtime& runtime, const jsi::Function& value, std::shared_ptr<CallInvoker> jsInvoker);
+RCTResponseSenderBlock convertJSIFunctionToCallback(jsi::Runtime& runtime, const jsi::Function& value,
+                                                    std::shared_ptr<CallInvoker> jsInvoker);
+
+} // namespace JSINSObjectConversion
