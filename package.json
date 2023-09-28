@@ -1,6 +1,6 @@
 {
   "name": "react-native-vision-camera",
-  "version": "2.15.11",
+  "version": "2.15.12",
   "description": "The Camera library that sees the vision.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -21,6 +21,9 @@
     "ios/**/*.mm",
     "ios/**/*.cpp",
     "ios/**/*.swift",
+    "cpp/*.cpp",
+    "cpp/*.h",
+    "cpp/*",
     "ios/VisionCamera.xcodeproj/project.pbxproj",
     "app.plugin.js",
     "VisionCamera.podspec",
